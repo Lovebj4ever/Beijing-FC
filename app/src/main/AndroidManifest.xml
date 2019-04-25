@@ -20,7 +20,8 @@
         <activity android:name=".datepick" />
         <activity android:name=".date_calculate" />
         <activity android:name=".NewEvent" />
-        <activity android:name=".SpecialDay"></activity>
+        <activity android:name=".SpecialDay" />
+        <activity android:name=".calculator"></activity>
     </application>
 
 </manifest>
