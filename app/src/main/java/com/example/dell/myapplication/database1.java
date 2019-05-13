@@ -13,11 +13,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class database1 extends SQLiteOpenHelper {
 
     public static final String CREATE_EVENT = "create table event("
-            +"name char primary key,"
-            +"content char,"
-            +"date char,"
-            +"time char,"
-            +"type char)";
+            +"name text primary key,"
+            +"content text,"
+            +"year int,"
+            +"month int,"
+            +"day int,"
+            +"time text,"
+            +"type text)";
 
     private Context mContext;
 

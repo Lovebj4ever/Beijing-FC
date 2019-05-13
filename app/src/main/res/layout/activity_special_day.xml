@@ -20,12 +20,18 @@
 
 
         </LinearLayout>
-
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/event_list"
+            android:paddingTop="60dp">
+        </ListView>
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:title="Special Day"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/Base.Theme.AppCompat.Light"/>
 
@@ -38,13 +44,8 @@
             android:layout_margin="16dp"
             android:src="@drawable/ic_add_white_48dp"
             app:elevation="8dp"/>
-<!--
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="510dp"
-            android:id="@+id/event_list"
-            android:paddingTop="60dp">
-        </ListView>-->
+
+
         
     </FrameLayout>
 

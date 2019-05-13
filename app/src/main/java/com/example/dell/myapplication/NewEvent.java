@@ -1,5 +1,4 @@
 package com.example.dell.myapplication;
-
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class NewEvent extends AppCompatActivity {
 
     LinearLayout layout1;
@@ -29,14 +31,26 @@ public class NewEvent extends AppCompatActivity {
     LinearLayout layout3;
     LinearLayout layout4;
     LinearLayout layout5;
-    EditText theme,content;
+    EditText theme,content,fuck;
     RadioButton layout3_button;
-    database1 specialday_database;
+    database1 dbHelper;
     TextView layout3_text;
     TextView layout5_text;
     TextView Layout2_text;
-
-
+    int layout_y=0;
+    int layout_m=0;
+    int layout_d=0;
+    int layout_b;
+    int layout_h;
+    int layout_mi;
+    ArrayList<String> output1= new ArrayList<>();
+    ArrayList<String> output2= new ArrayList<>();
+    ArrayList<String> output3= new ArrayList<>();
+    ArrayList<String> output4= new ArrayList<>();
+    int year;
+    int month;
+    int day;
+    String type/*= new ArrayList<>()*/;
     class RadioListener implements RadioGroup.OnCheckedChangeListener{
 
         @Override
@@ -45,62 +59,11 @@ public class NewEvent extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.calcu:
-                SQLiteDatabase db = specialday_database.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                //将数值存入数据库
-                values.put("name",theme.getText().toString());
-                values.put("content",content.getText().toString());
-                values.put("date",theme.getText().toString());
-                values.put("time",layout5_text.getText().toString());
-                values.put("type",layout3_text.getText().toString());
-
-
-
-                Cursor cursor = db.query("event",null,null,null,null,null,null);
-                if(cursor.moveToFirst()){
-                    do{
-                        //遍历对象
-                        String name = cursor.getString(cursor.getColumnIndex("theme"));
-                        String content = cursor.getString(cursor.getColumnIndex("content"));
-                        String type = cursor.getString(cursor.getColumnIndex("type"));
-                        String date = cursor.getString(cursor.getColumnIndex("date"));
-                        String time = cursor.getString(cursor.getColumnIndex("time"));
-
-                        System.out.println("你好"+name);
-                        Log.d("NewEvent",content);
-                        Log.d("NewEvent",type);
-                        Log.d("NewEvent",date);
-                        Log.d("NewEvent",time);
-
-
-                    }while(cursor.moveToNext());
-                }
-                cursor.close();
-
-
-                //返回主界面
-                Intent intent1 = new Intent(NewEvent.this, SpecialDay.class);
-                startActivity(intent1);
-
-
-
-
-                break;
-            default:
-        }
-        return true;
-    }
-
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.topbar,menu);
         return true;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,13 +77,14 @@ public class NewEvent extends AppCompatActivity {
         layout3_text = (TextView) findViewById(R.id.layout3_textView);
         layout5_text = (TextView) findViewById(R.id.layout5_textView);
         Layout2_text = (TextView) findViewById(R.id.Layout2_text);
-
         theme = (EditText) findViewById(R.id.theme);
         content = (EditText) findViewById(R.id.content);
-        Toolbar topbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(topbar);
+        /*Toolbar topbar = (Toolbar) findViewById(R.id.toolbar);*/
+
+        //setSupportActionBar(topbar);
         //创建数据库
-        specialday_database = new database1(this,"SpecialDay.db",null,1);
+        dbHelper = new database1(this,"SpecialDay.db",null,1);
+
 
 
 
@@ -142,10 +106,9 @@ public class NewEvent extends AppCompatActivity {
                     public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt)
                     {
                         DatePicker datepicker1= (DatePicker) layout_alert.findViewById(R.id.datepick);
-
-                        int layout_y=datepicker1.getYear();
-                        int layout_m=datepicker1.getMonth()+1;
-                        int layout_d=datepicker1.getDayOfMonth();
+                         layout_y=datepicker1.getYear();
+                         layout_m=datepicker1.getMonth()+1;
+                         layout_d=datepicker1.getDayOfMonth();
                         System.out.println("y:"+layout_y+" m:"+layout_m+" d:"+layout_d);
                         Layout2_text.setText(layout_y+"-"+layout_m+"-"+layout_d); //  获取时间
 
@@ -158,6 +121,8 @@ public class NewEvent extends AppCompatActivity {
 
                     }
                 }).create().show();
+
+
             }
 
         });
@@ -186,9 +151,9 @@ public class NewEvent extends AppCompatActivity {
 
 
                         //获取文本到文本框
-                        String str = layout3_button.getText().toString();
-                        System.out.println(str);
-                        layout3_text.setText(str);
+                        type = layout3_button.getText().toString();
+                        System.out.println(type);
+                        layout3_text.setText(type);
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener()
                 {
@@ -227,12 +192,12 @@ public class NewEvent extends AppCompatActivity {
                         {
                             TimePicker timepicker1= (TimePicker) layout_alert.findViewById(R.id.timepicker);
 
-                            int layout_b = timepicker1.getBaseline();
-                            int layout_h = 0;
+                            layout_b = timepicker1.getBaseline();
+                            layout_h = 0;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 layout_h = timepicker1.getHour();
                             }
-                            int layout_mi = 0;
+                            layout_mi = 0;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 layout_mi = timepicker1.getMinute();
                             }
@@ -264,6 +229,31 @@ public class NewEvent extends AppCompatActivity {
 
                         }
                     }).create().show();
+            }
+        });
+
+
+        Button store = (Button)findViewById(R.id.store);
+        store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.getWritableDatabase();
+                String text = content.getText().toString();
+                String text2 = theme.getText().toString();
+                String text3 = layout5_text.getText().toString();
+                SQLiteDatabase d =dbHelper.getReadableDatabase();
+                ContentValues values =new ContentValues();
+                values.put("name",text2);
+                values.put("content",text);
+                values.put("year",layout_y);
+                values.put("month",layout_m);
+                values.put("day",layout_d);
+                values.put("time",text3);
+                values.put("type",type);
+                d.insert("event",null,values);
+                values.clear();
+                Intent back  = new Intent(NewEvent.this,SpecialDay.class);
+                startActivity(back);
             }
         });
 

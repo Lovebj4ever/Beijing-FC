@@ -10,4 +10,8 @@
         >
     </item>
 
+    <item
+        android:id="@+id/d"
+        app:showAsAction="always"
+        android:title="delete"></item>
 </menu>
