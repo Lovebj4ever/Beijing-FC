@@ -10,4 +10,10 @@
         >
     </item>
 
+    <item
+        android:id="@+id/history"
+        android:title="history focus"
+        app:showAsAction="always">
+    </item>
+
 </menu>

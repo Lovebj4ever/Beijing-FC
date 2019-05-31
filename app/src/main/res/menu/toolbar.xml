@@ -3,11 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/calculater"
+        android:id="@+id/calculator"
         android:icon="@drawable/cal"
         android:title="calculate"
         app:showAsAction="always"
         >
     </item>
 
+    <item
+        android:id="@+id/d"
+        app:showAsAction="always"
+        android:title="Back"></item>
 </menu>

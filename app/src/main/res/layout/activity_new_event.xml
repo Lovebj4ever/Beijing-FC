@@ -8,13 +8,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.dell.myapplication.NewEvent">
 
-    <android.support.v7.widget.Toolbar
+    <!--<android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/Base.Theme.AppCompat.Light"/>
+        app:popupTheme="@style/Base.Theme.AppCompat.Light"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
 
         <EditText
             android:maxLines="1"
-            android:maxLength="10"
+            android:maxLength="20"
             android:paddingTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -130,6 +130,7 @@
             android:paddingTop="16dp"
             android:textSize="28dp"/>
 
+
     </LinearLayout>
 
 
@@ -192,5 +193,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/content"
         android:hint="事件备注内容..."/>
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="存储"
+        android:id="@+id/store"/>
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

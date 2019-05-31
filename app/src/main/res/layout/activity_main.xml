@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,7 +8,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/mainbackground"
     android:fitsSystemWindows="true">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +19,7 @@
         android:orientation="horizontal">
 
         <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_weight="3">
@@ -24,6 +28,7 @@
                 android:id="@+id/main_day"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
+                android:textStyle="bold"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
@@ -38,6 +43,7 @@
                 android:layout_width="80dp"
                 android:layout_height="16dp"
                 android:layout_alignTop="@id/main_day"
+                android:textStyle="bold"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
@@ -56,10 +62,20 @@
                 android:layout_toRightOf="@id/main_day"
                 android:text="04/2019"
                 android:textSize="14sp" />
+
+
+            <ImageView
+                android:id="@+id/main_delete"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/delete" />
         </RelativeLayout>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,6 +107,7 @@
                 <TextView
                     android:id="@+id/main_title1"
                     style="@style/MainActivity_Title"
+                    android:textStyle="bold"
                     android:text="日记内容" />
 
                 <TextView
@@ -116,6 +133,7 @@
                 <TextView
                     android:id="@+id/main_title2"
                     style="@style/MainActivity_Title"
+                    android:textStyle="bold"
                     android:text="任务" />
 
                 <TextView
@@ -150,6 +168,7 @@
                 <TextView
                     android:id="@+id/main_title3"
                     style="@style/MainActivity_Title"
+                    android:textStyle="bold"
                     android:text="想法" />
 
                 <TextView
@@ -175,6 +194,7 @@
                 <TextView
                     android:id="@+id/main_title4"
                     style="@style/MainActivity_Title"
+                    android:textStyle="bold"
                     android:text="摘录" />
 
                 <TextView
@@ -184,9 +204,7 @@
             </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
-
+   </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -214,7 +232,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/calendar"
+            android:id="@+id/account_book"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -222,15 +240,15 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/ivCalendar"
+                android:id="@+id/ivAccountBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/calendar"/>
+                android:src="@drawable/yuan"/>
             <TextView
-                android:id="@+id/tvCalendar"
+                android:id="@+id/tvAccountBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="日历"/>
+                android:text="账本"/>
 
         </LinearLayout>
 
@@ -255,7 +273,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/account_book"
+            android:id="@+id/focus"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -263,15 +281,15 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/ivAccountBook"
+                android:id="@+id/ivFocus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/yuan"/>
+                android:src="@drawable/alert"/>
             <TextView
-                android:id="@+id/tvAccountBook"
+                android:id="@+id/tvFocus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="账本"/>
+                android:text="专注"/>
 
         </LinearLayout>
 

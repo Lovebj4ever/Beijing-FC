@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@mipmap/back"
+    android:layout_width="240dp"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            style="@style/MenuTabText"
+            android:text="主页"
+            android:drawableLeft="@drawable/book"
+            android:background="#33aa9900"/>
+        <TextView
+            style="@style/MenuTabText"
+            android:text="搜索"
+            android:drawableLeft="@drawable/monitor"/>
+        <TextView
+            style="@style/MenuTabText"
+            android:text="计算器"
+            android:drawableLeft="@drawable/calendar"/>
+        <TextView
+            style="@style/MenuTabText"
+            android:text="设置"
+            android:drawableLeft="@drawable/setting" />
+    </LinearLayout>
+</ScrollView>

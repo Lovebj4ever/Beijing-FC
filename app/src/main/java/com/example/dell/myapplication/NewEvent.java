@@ -1,20 +1,23 @@
 package com.example.dell.myapplication;
-
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,8 +25,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class NewEvent extends AppCompatActivity {
+import com.example.dell.myapplication.database.database1;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class NewEvent extends AppCompatActivity {
+    private static final int IMAGE_REQUEST_CODE = 1;
+    Bitmap pic = null;
+    byte[] texts = null;
     LinearLayout layout1;
     LinearLayout layout2;
     LinearLayout layout3;
@@ -31,12 +44,24 @@ public class NewEvent extends AppCompatActivity {
     LinearLayout layout5;
     EditText theme,content;
     RadioButton layout3_button;
-    database1 specialday_database;
+    database1 dbHelper;
     TextView layout3_text;
     TextView layout5_text;
     TextView Layout2_text;
+    int layout_y=0;
+    int layout_m=0;
+    int layout_d=0;
+    int layout_b=0;
+    int layout_h=0;
+    int layout_mi=0;
+    int year_now = 0;
+    int month_now=0;
+    int day_now=0;
+    int sumday = 0;
+    ImageView iv_photo;
 
-
+    Calendar calendar = Calendar.getInstance();
+    String type/*= new ArrayList<>()*/;
     class RadioListener implements RadioGroup.OnCheckedChangeListener{
 
         @Override
@@ -45,60 +70,89 @@ public class NewEvent extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.calcu:
-                SQLiteDatabase db = specialday_database.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                //将数值存入数据库
-                values.put("name",theme.getText().toString());
-                values.put("content",content.getText().toString());
-                values.put("date",theme.getText().toString());
-                values.put("time",layout5_text.getText().toString());
-                values.put("type",layout3_text.getText().toString());
-
-
-
-                Cursor cursor = db.query("event",null,null,null,null,null,null);
-                if(cursor.moveToFirst()){
-                    do{
-                        //遍历对象
-                        String name = cursor.getString(cursor.getColumnIndex("theme"));
-                        String content = cursor.getString(cursor.getColumnIndex("content"));
-                        String type = cursor.getString(cursor.getColumnIndex("type"));
-                        String date = cursor.getString(cursor.getColumnIndex("date"));
-                        String time = cursor.getString(cursor.getColumnIndex("time"));
-
-                        System.out.println("你好"+name);
-                        Log.d("NewEvent",content);
-                        Log.d("NewEvent",type);
-                        Log.d("NewEvent",date);
-                        Log.d("NewEvent",time);
-
-
-                    }while(cursor.moveToNext());
-                }
-                cursor.close();
-
-
-                //返回主界面
-                Intent intent1 = new Intent(NewEvent.this, SpecialDay.class);
-                startActivity(intent1);
-
-
-
-
-                break;
-            default:
-        }
-        return true;
-    }
-
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.topbar,menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(resultCode== Activity.RESULT_OK) {
+            switch (requestCode) {
+                case IMAGE_REQUEST_CODE:
+                    Uri selectedImage = data.getData();
+                    pic = setImage(selectedImage);
+                    //setImage(selectedImage);
+
+                    texts = bitmabToBytes(NewEvent.this,pic);
+                    Bitmap show = BitmapFactory.decodeByteArray(texts,0,texts.length);
+                    iv_photo.setImageBitmap(show);
+                    break;
+            }
+        }
+    }
+    private Bitmap setImage(Uri uri){
+        try{
+            Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+            //Bitmap show = BitmapFactory.decodeByteArray(texts,0,texts.length);
+            //iv_photo.setImageBitmap(show);
+            return bitmap;
+            //iv_photo.setImageBitmap(bitmap);
+        }
+        catch(FileNotFoundException e ){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public byte[] bitmabToBytes(Context context,Bitmap bitmap){
+
+        int size = bitmap.getWidth() * bitmap.getHeight() * 4;
+
+        ByteArrayOutputStream baos= new ByteArrayOutputStream(size);
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            byte[] imagedata = baos.toByteArray();
+            return imagedata;
+        }catch (Exception e){
+        }finally {
+            try {
+                bitmap.recycle();
+                baos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new byte[0];
+    }
+    private int compareDate(int year1,int year2,int month1,int month2,int day1,int day2){ //0 if date1<date2,1 if date1==date2, 2 if date1>date2
+        if(year1<year2){
+            return 0;
+        }
+        if(year1>year2){
+            return 2;
+        }
+        if(year1==year2){
+            if(month1<month2){
+                return 0;
+            }
+            if(month1>month2){
+                return 2;
+            }
+            if(month1==month2){
+                if(day1<day2){
+                    return 0;
+                }
+                if(day1>day2){
+                    return 2;
+                }
+                if(day1==day2){
+                    return 1;
+                }
+            }
+        }
+        return 3;
     }
 
 
@@ -114,13 +168,15 @@ public class NewEvent extends AppCompatActivity {
         layout3_text = (TextView) findViewById(R.id.layout3_textView);
         layout5_text = (TextView) findViewById(R.id.layout5_textView);
         Layout2_text = (TextView) findViewById(R.id.Layout2_text);
-
         theme = (EditText) findViewById(R.id.theme);
+
         content = (EditText) findViewById(R.id.content);
-        Toolbar topbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(topbar);
+        /*Toolbar topbar = (Toolbar) findViewById(R.id.toolbar);*/
+        NewEvent.this.setResult(RESULT_OK);
+        //setSupportActionBar(topbar);
         //创建数据库
-        specialday_database = new database1(this,"SpecialDay.db",null,1);
+        dbHelper = new database1(this,"SpecialDay.db",null,1);
+
 
 
 
@@ -142,10 +198,9 @@ public class NewEvent extends AppCompatActivity {
                     public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt)
                     {
                         DatePicker datepicker1= (DatePicker) layout_alert.findViewById(R.id.datepick);
-
-                        int layout_y=datepicker1.getYear();
-                        int layout_m=datepicker1.getMonth()+1;
-                        int layout_d=datepicker1.getDayOfMonth();
+                         layout_y=datepicker1.getYear();
+                         layout_m=datepicker1.getMonth()+1;
+                         layout_d=datepicker1.getDayOfMonth();
                         System.out.println("y:"+layout_y+" m:"+layout_m+" d:"+layout_d);
                         Layout2_text.setText(layout_y+"-"+layout_m+"-"+layout_d); //  获取时间
 
@@ -158,6 +213,8 @@ public class NewEvent extends AppCompatActivity {
 
                     }
                 }).create().show();
+
+
             }
 
         });
@@ -186,9 +243,9 @@ public class NewEvent extends AppCompatActivity {
 
 
                         //获取文本到文本框
-                        String str = layout3_button.getText().toString();
-                        System.out.println(str);
-                        layout3_text.setText(str);
+                        type = layout3_button.getText().toString();
+                        System.out.println(type);
+                        layout3_text.setText(type);
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener()
                 {
@@ -201,10 +258,12 @@ public class NewEvent extends AppCompatActivity {
         });
 
         layout4.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v) {
 
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                iv_photo = (ImageView) findViewById(R.id.img);
+                startActivityForResult(i,IMAGE_REQUEST_CODE);
             }
         });
 
@@ -227,12 +286,12 @@ public class NewEvent extends AppCompatActivity {
                         {
                             TimePicker timepicker1= (TimePicker) layout_alert.findViewById(R.id.timepicker);
 
-                            int layout_b = timepicker1.getBaseline();
-                            int layout_h = 0;
+                            layout_b = timepicker1.getBaseline();
+                            layout_h = 0;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 layout_h = timepicker1.getHour();
                             }
-                            int layout_mi = 0;
+                            layout_mi = 0;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 layout_mi = timepicker1.getMinute();
                             }
@@ -264,6 +323,55 @@ public class NewEvent extends AppCompatActivity {
 
                         }
                     }).create().show();
+            }
+        });
+        Button store = (Button)findViewById(R.id.store);
+        store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.getWritableDatabase();
+                String text = null;
+                text = content.getText().toString();
+                System.out.println(text);
+                String text2 = theme.getText().toString();
+                String text3 = null;
+                if(layout_mi!=0||layout_h!=0) {
+                    text3 = layout5_text.getText().toString();
+                }
+                SQLiteDatabase d =dbHelper.getReadableDatabase();
+                ContentValues values =new ContentValues();
+                if(type!=null&& layout_y != 0 && layout_m != 0 && layout_d != 0 ) {
+                    year_now = calendar.get(Calendar.YEAR);
+                    month_now = calendar.get(Calendar.MONTH)+1;
+                    day_now = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    if((type.equals("倒数日")&&(compareDate(year_now,layout_y,month_now,layout_m,day_now,layout_d)==0||compareDate(year_now,layout_y,month_now,layout_m,day_now,layout_d)==1))||type.equals("纪念日")&&(compareDate(year_now,layout_y,month_now,layout_m,day_now,layout_d)==1||compareDate(year_now,layout_y,month_now,layout_m,day_now,layout_d)==2)) {
+                        if (!"".equals(content.getText().toString().trim()) && text2 != null && !"".equals(layout5_text.getText().toString().trim()) && pic != null) {
+                            values.put("name", text2);
+                            values.put("content", text);
+                            values.put("year", layout_y);
+                            values.put("month", layout_m);
+                            values.put("day", layout_d);
+                            values.put("time", text3);
+                            values.put("pic", texts);
+                            values.put("type", type);
+                            d.insert("event", null, values);
+                            values.clear();
+                            Intent back = new Intent(NewEvent.this, SpecialDay.class);
+                            startActivity(back);
+                            finish();
+                        } else {
+                            Toast.makeText(NewEvent.this, "Please enter all the data", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                    else{
+                        Toast.makeText(NewEvent.this,"Please enter the correct date",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(NewEvent.this,"Please enter all the data",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

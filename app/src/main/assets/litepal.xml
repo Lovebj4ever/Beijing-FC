@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="diary" ></dbname>
+
+    <version value="1" ></version>
+
+    <list>
+        <mapping class="com.example.dell.myapplication.model.Diary"></mapping>
+    </list>
+
+    <dbname value="weather" ></dbname>
+    <list>
+        <mapping class="com.example.dell.myapplication.model.Province"></mapping>
+        <mapping class="com.example.dell.myapplication.model.City"></mapping>
+    </list>
+</litepal>
